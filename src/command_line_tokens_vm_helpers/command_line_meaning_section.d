@@ -2,7 +2,10 @@
 
 module command_line_tokens_vm_helpers.command_line_meaning_section;
 
-import command_line_tokens_vm                     : Command_Line_Meaning, Section_Type, NCN, CNC, Meaning_Source;
+import command_line_tokens_vm                     : Command_Line_Meaning, Section_Type, Meaning_Source;
+import structs.ncn                                : NCN;
+import structs.cnc                                : CNC;
+
 import command_line_tokens_vm_helpers.token_kinds : TokenKind;
 import command_line_tokens_vm_helpers.command_line_meaning_invalid : invalid;
 
@@ -47,14 +50,7 @@ Command_Line_Meaning command_line_meaning_section(in string[] tokens_lower,
         return invalid();
 
     // --------------------------------------------
-    // Section_Type classification:
-    //
-    // Pure alpha: "a", "b", "c"
-    // Mixed: "a1", "3a2", "b12"
-    //
-    // Your domain rules:
-    // - If token contains letters only → NCN
-    // - If token contains letters + digits → CNC
+    // Section_Type classification
     // --------------------------------------------
     Section_Type st;
 
@@ -82,7 +78,6 @@ Command_Line_Meaning command_line_meaning_section(in string[] tokens_lower,
     result.ncn = NCN.init;
     result.cnc = CNC.init;
 
-    // NEW: meaning source classification for section meanings
     result.meaning_source  = Meaning_Source.token;
 
     return result;

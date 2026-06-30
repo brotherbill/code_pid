@@ -3,6 +3,9 @@
 module command_line_tokens_vm_helpers.command_line_meaning_chapter;
 
 import command_line_tokens_vm                                      : Command_Line_Meaning, Section_Type, Meaning_Source;
+import structs.ncn                                                 : NCN;
+import structs.cnc                                                 : CNC;
+
 import command_line_tokens_vm_helpers.command_line_meaning_invalid : invalid;
 import command_line_tokens_vm_helpers.token_kinds                  : TokenKind;
 
