@@ -9,6 +9,10 @@ import command_line_tokens_vm_helpers.command_line_meaning_page    : command_lin
 import command_line_tokens_vm_helpers.command_line_meaning_section : command_line_meaning_section;
 import command_line_tokens_vm_helpers.command_line_meaning_tree_descent : command_line_meaning_tree_descent;
 
+// canonical NCN/CNC
+import structs.ncn : NCN;
+import structs.cnc : CNC;
+
 // -------------------------------------------------------------------
 // Domain types required by all meaning helpers
 // -------------------------------------------------------------------
@@ -18,46 +22,6 @@ enum Section_Type
     none,
     ncn,   // number-major, letter, number-minor
     cnc    // letter-major, number, letter-minor
-}
-
-struct NCN
-{
-    ubyte number_major;  // 0–99 (0 means “missing”)
-    char  letter;        // 'a'–'z' or NUL ('\0')
-    ubyte number_minor;  // 0–99 (0 means “missing”)
-
-    invariant
-    {
-        assert((letter == '\0') || ('a' <= letter && letter <= 'z'),
-               "letter must be in the range 'a'–'z' or be NUL");
-
-        assert(number_major <= 99,
-               "number_major must be in the range 0–99");
-
-        assert(number_minor <= 99,
-               "number_minor must be in the range 0–99");
-
-        if (letter == '\0')
-        {
-            assert(number_major == 0,
-                   "number_major must be 0 when letter is NUL");
-
-            assert(number_minor == 0,
-                   "number_minor must be 0 when letter is NUL");
-        }
-        else
-        {
-            assert(number_major != 0 || number_minor != 0,
-                   "at least one number must be non‑zero when letter is present");
-        }
-    }
-}
-
-struct CNC
-{
-    char  letter_major;  // 'a'–'z'
-    ubyte number;        // 0–9
-    char  letter_minor;  // 'a'–'z'
 }
 
 enum Meaning_Source
@@ -79,8 +43,8 @@ struct Command_Line_Meaning
 
     Section_Type section_type;
 
-    NCN ncn;
-    CNC cnc;
+    NCN ncn;   // canonical NCN from structs.ncn
+    CNC cnc;   // canonical CNC from structs.cnc
 
     Meaning_Source meaning_source;
 }
