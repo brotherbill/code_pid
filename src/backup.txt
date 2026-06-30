@@ -1,0 +1,171 @@
+// Start of Document /</repo:code_pid/src/command_line_tokens_vm.d/>
+
+module code_pid.command_line_tokens_vm;
+
+// bring in the helper modules
+import command_line.meaning_init                  : meaning_init_invalid;
+import command_line.normalize_tokens              : normalize_tokens;
+import command_line.validate_tokens_character_set : validate_tokens_character_set;
+
+enum Section_Type
+{
+    none,  // no section info
+    ncn,   // 7, 7 b, 7 b 1
+    cnc,   // a, a 1, a 1 b
+}
+
+struct NCN
+{
+    ubyte number_major;
+    char  letter;
+    ubyte number_minor;
+
+    invariant
+    {
+        assert((letter == '\0') || ('a' <= letter && letter <= 'z'));
+        assert(number_major <= 99);  // No chapter has 100 sections
+        assert(number_minor <= 99);  // No chapter has 100 sub-sections
+    }
+}
+
+struct CNC
+{
+    char  letter_major;
+    ubyte number;
+    char  letter_minor;
+
+    invariant
+    {
+        assert((letter_major == '\0') || ('a' <= letter_major && letter_major <= 'z'));
+        assert((letter_minor == '\0') || ('a' <= letter_minor && letter_minor <= 'z'));
+        assert(0 <= number && number <= 99);  // No chapter has 100 sub-sections
+    }
+}
+
+struct Command_Line_Meaning
+{
+    bool         is_valid;
+
+    bool         has_chapter;
+    bool         has_page;
+
+    ubyte        chapter;   // 0 if missing, 1 - 90 if has chapter
+    ushort       page;      // 0 if missing, 1 - 999 if has page
+
+    Section_Type section_type;  // none | ncn | cnc
+
+    NCN          ncn;       // .init if not present
+    CNC          cnc;       // .init if not present
+
+    invariant
+    {
+        // tokens may be empty; valid domain
+        if (is_valid) 
+        {
+            assert (has_chapter || has_page, "a valid command line has a chapter and/or page");
+
+            if (has_chapter)
+            {
+                assert(0 < chapter && chapter <= 90, "has_chapter means that chapter is between 1 and 90");
+            }
+            else
+            {
+                assert(chapter == 0, "has_chapter means that chapter is 0");
+            }
+
+            if (has_page)
+            {
+                assert(0 < page && page <= 999, "has_page means that page is between 1 and 999");
+            }
+            else
+            {
+                assert(page == 0, "has_page means that page is 0");
+            }
+
+            final switch (section_type) {
+                case Section_Type.none:
+                    assert (ncn.number_major == 0, "a valid none has number_major of 0");
+                    assert (ncn.letter == '\0', "a valid none has letter of NUL");
+                    assert (ncn.number_minor == 0, "a valid none has number_minor of 0");
+                    assert (cnc.letter_major == '\0', "a valid none has letter_major of NUL");
+                    assert (cnc.number == 0, "a valid none has number of 0");
+                    assert (cnc.letter_minor == '\0', "a valid none has letter_minor of NUL");
+                    break;
+                case Section_Type.ncn:
+                    assert (0 < ncn.number_major && ncn.number_major <= 99, "a valid ncn has number_major of 1 - 99");
+                    if (ncn.letter != '\0') 
+                    {
+                        assert ('a' <= ncn.letter && ncn.letter <= 'z', "a valid ncn has letter of a - z");
+                        if (ncn.number_minor != 0) 
+                        {
+                            assert (0 < ncn.number_minor && ncn.number_minor <= 99, "a valid ncn has number_minor of 1 - 99");
+                        }
+                    }
+                    assert (cnc.letter_major == '\0', "a valid ncn has letter_major of NUL");
+                    assert (cnc.number == 0, "a valid ncn has number of 0");
+                    assert (cnc.letter_minor == '\0', "a valid ncn has letter_minor of NUL");
+                    break;
+                case Section_Type.cnc:
+                    assert ('a' <= cnc.letter_major && cnc.letter_major <= 'z', "a valid cnc has letter_major of a - z");
+                    if (cnc.number != 0) 
+                    {
+                        assert (0 < cnc.number && cnc.number <= 99, "a valid cnc has number of 1 - 99");
+                        if (cnc.letter_minor != '\0')
+                        {
+                            assert ('a' <= cnc.letter_minor && cnc.letter_minor <= 'z', "a valid cnc has letter of a - z");
+                        }
+                    }
+                    assert (ncn.number_major == 0, "a valid cnc has number_major of 0");
+                    assert (ncn.letter == '\0', "a valid cnc has letter of NUL");
+                    assert (ncn.number_minor == 0, "a valid cnc has number_minor of 0");
+                    break;
+            }
+        }
+        else 
+        {
+            // !is_valid
+            assert (!has_chapter,            "an invalid has_chapter is always false");
+            assert (!has_page,               "an invalid has_page is always false");
+            assert (chapter         == 0,    "an invalid chapter is 0");
+            assert (page            == 0,    "an invalid page is 0");
+            assert (section_type    == Section_Type.none, "an invalid section_type is Section_Type.none");
+            assert(cnc.letter_major == '\0', "invalid meaning must have CNC letter_major of NUL");
+            assert(cnc.number       == 0,    "invalid meaning must have CNC number of 0");
+            assert(cnc.letter_minor == '\0', "invalid meaning must have CNC letter_minor of NUL");
+            assert(ncn.number_major == 0,    "invalid meaning must have NCN number_major of 0");
+            assert(ncn.letter       == '\0', "invalid meaning must have NCN letter of NUL");
+            assert(ncn.number_minor == 0,    "invalid meaning must have NCN number_minor of 0");
+        }
+    }
+
+}
+
+struct Command_Line_Tokens_VM
+{
+    string[] tokens;  // What arguments user typed in with CLI
+
+    @safe pure nothrow
+    static Command_Line_Tokens_VM make(in string[] tokens)
+    {
+        Command_Line_Tokens_VM result;
+
+        result.tokens = tokens.dup;
+
+        return result;
+    }
+
+@safe pure nothrow
+Command_Line_Meaning meaning() const
+{
+    auto result = meaning_init_invalid();
+
+    auto tokens_lower = normalize_tokens(tokens);
+
+    if (!validate_tokens_character_set(tokens_lower))
+        return result;   // invalid meaning
+
+    return result;
+}
+}
+
+// End of Document /</repo:code_pid/src/command_line_tokens_vm.d/>
