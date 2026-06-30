@@ -2,7 +2,7 @@
 
 module command_line_tokens_vm_helpers.command_line_meaning_section;
 
-import command_line_tokens_vm                     : Command_Line_Meaning, Section_Type, NCN, CNC;
+import command_line_tokens_vm                     : Command_Line_Meaning, Section_Type, NCN, CNC, Meaning_Source;
 import command_line_tokens_vm_helpers.token_kinds : TokenKind;
 import command_line_tokens_vm_helpers.command_line_meaning_invalid : invalid;
 
@@ -69,7 +69,6 @@ Command_Line_Meaning command_line_meaning_section(in string[] tokens_lower,
     Command_Line_Meaning result;
 
     result.is_valid        = true;
-    result.is_tree_descent = false;
 
     result.has_chapter     = false;
     result.has_page        = false;
@@ -83,5 +82,10 @@ Command_Line_Meaning command_line_meaning_section(in string[] tokens_lower,
     result.ncn = NCN.init;
     result.cnc = CNC.init;
 
+    // NEW: meaning source classification for section meanings
+    result.meaning_source  = Meaning_Source.token;
+
     return result;
 }
+
+// End of Document /</repo:code_pid/src/command_line/command_line_meaning_section.d/>

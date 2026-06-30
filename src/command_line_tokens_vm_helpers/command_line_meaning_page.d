@@ -2,7 +2,7 @@
 
 module command_line_tokens_vm_helpers.command_line_meaning_page;
 
-import command_line_tokens_vm                     : Command_Line_Meaning, Section_Type;
+import command_line_tokens_vm                     : Command_Line_Meaning, Section_Type, Meaning_Source;
 import command_line_tokens_vm_helpers.token_kinds : TokenKind;
 import command_line_tokens_vm_helpers.command_line_meaning_invalid : invalid;
 
@@ -10,13 +10,15 @@ import command_line_tokens_vm_helpers.command_line_meaning_invalid : invalid;
 Command_Line_Meaning command_line_meaning_page(in string[] tokens_lower,
                                                in TokenKind[] token_kinds)
 {
-    // Page domain invariant
     enum ushort MAX_PAGE = 999;
 
     // --------------------------------------------
     // Case 1: prefixed page token: pNN
     // --------------------------------------------
-    if (tokens_lower.length == 1 && token_kinds[0] == TokenKind.page)
+    if (tokens_lower.length == 1 &&
+        token_kinds[0] == TokenKind.page &&
+        tokens_lower[0].length >= 2 &&
+        tokens_lower[0][0] == 'p')
     {
         import std.conv : to;
 
@@ -24,9 +26,8 @@ Command_Line_Meaning command_line_meaning_page(in string[] tokens_lower,
 
         try
         {
-            string page_token = tokens_lower[0];
             // strip leading 'p'
-            page = page_token[1 .. $].to!ushort;
+            page = tokens_lower[0][1 .. $].to!ushort;
         }
         catch (Exception)
         {
@@ -38,12 +39,13 @@ Command_Line_Meaning command_line_meaning_page(in string[] tokens_lower,
 
         Command_Line_Meaning result;
         result.is_valid        = true;
-        result.is_tree_descent = false;
         result.has_chapter     = false;
         result.has_page        = true;
         result.chapter         = 0;
         result.page            = page;
         result.section_type    = Section_Type.none;
+
+        result.meaning_source  = Meaning_Source.token;
         return result;
     }
 
@@ -51,7 +53,8 @@ Command_Line_Meaning command_line_meaning_page(in string[] tokens_lower,
     // Case 2: naked numeric page: NN (91–999)
     // --------------------------------------------
     if (tokens_lower.length == 1 &&
-        token_kinds[0] == TokenKind.page)
+        token_kinds[0] == TokenKind.page &&
+        (tokens_lower[0].length >= 1 && tokens_lower[0][0] != 'p'))
     {
         import std.conv : to;
 
@@ -72,12 +75,13 @@ Command_Line_Meaning command_line_meaning_page(in string[] tokens_lower,
 
         Command_Line_Meaning result;
         result.is_valid        = true;
-        result.is_tree_descent = false;
         result.has_chapter     = false;
         result.has_page        = true;
         result.chapter         = 0;
         result.page            = page;
         result.section_type    = Section_Type.none;
+
+        result.meaning_source  = Meaning_Source.token;
         return result;
     }
 

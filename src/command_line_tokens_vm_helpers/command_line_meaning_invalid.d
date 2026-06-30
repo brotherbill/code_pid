@@ -2,7 +2,7 @@
 
 module command_line_tokens_vm_helpers.command_line_meaning_invalid;
 
-import command_line_tokens_vm : Command_Line_Meaning, Section_Type, NCN, CNC;
+import command_line_tokens_vm : Command_Line_Meaning, Section_Type, NCN, CNC, Meaning_Source;
 
 @safe pure nothrow
 Command_Line_Meaning invalid()
@@ -10,7 +10,6 @@ Command_Line_Meaning invalid()
     Command_Line_Meaning result;
 
     result.is_valid        = false;
-    result.is_tree_descent = false;
     result.has_chapter     = false;
     result.has_page        = false;
     result.chapter         = 0;
@@ -18,6 +17,8 @@ Command_Line_Meaning invalid()
     result.section_type    = Section_Type.none;
     result.ncn             = NCN.init;
     result.cnc             = CNC.init;
+
+    result.meaning_source  = Meaning_Source.unknown;
 
     return result;
 }
