@@ -21,9 +21,42 @@ enum Section_Type
 
 struct NCN
 {
-    ubyte number_major;  // 0–9
-    char  letter;        // 'a'–'z'
-    ubyte number_minor;  // 0–9
+    ubyte number_major;  // 0–99 (0 means “missing”)
+    char  letter;        // 'a'–'z' or NUL ('\0')
+    ubyte number_minor;  // 0–99 (0 means “missing”)
+
+    invariant
+    {
+        // Letter domain
+        assert((letter == '\0') || ('a' <= letter && letter <= 'z'),
+               "letter must be in the range 'a'–'z' or be NUL");
+
+        // Numeric domain
+        assert(number_major <= 99,
+               "number_major must be in the range 0–99");
+
+        assert(number_minor <= 99,
+               "number_minor must be in the range 0–99");
+
+        // Semantic completeness rules
+        //
+        // Case 1: NUL letter → both numbers must be zero
+        if (letter == '\0')
+        {
+            assert(number_major == 0,
+                   "number_major must be 0 when letter is NUL");
+
+            assert(number_minor == 0,
+                   "number_minor must be 0 when letter is NUL");
+        }
+
+        // Case 2: letter present → at least one number must be non‑zero
+        else
+        {
+            assert(number_major != 0 || number_minor != 0,
+                   "at least one number must be non‑zero when letter is present");
+        }
+    }
 }
 
 struct CNC
