@@ -2,7 +2,9 @@
 
 module command_line_tokens_vm_helpers.command_line_meaning_invalid;
 
-import command_line_tokens_vm : Command_Line_Meaning, Section_Type, NCN, CNC, Meaning_Source;
+import structs.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_Source;
+import structs.ncn                  : NCN;
+import structs.cnc                  : CNC;
 
 @safe pure nothrow
 Command_Line_Meaning invalid()

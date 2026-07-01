@@ -13,45 +13,8 @@ import command_line_tokens_vm_helpers.command_line_meaning_tree_descent : comman
 import structs.ncn : NCN;
 import structs.cnc : CNC;
 
-// -------------------------------------------------------------------
-// Domain types required by all meaning helpers
-// -------------------------------------------------------------------
-
-enum Section_Type
-{
-    none,
-    ncn,   // number-major, letter, number-minor
-    cnc    // letter-major, number, letter-minor
-}
-
-enum Meaning_Source
-{
-    tree_descent,   // zero-token mode
-    token,          // token-generated meaning
-    unknown,        // fallback / error / unclassified
-}
-
-struct Command_Line_Meaning
-{
-    bool  is_valid;
-
-    bool  has_chapter;
-    bool  has_page;
-
-    ushort chapter;
-    ushort page;
-
-    Section_Type section_type;
-
-    NCN ncn;   // canonical NCN from structs.ncn
-    CNC cnc;   // canonical CNC from structs.cnc
-
-    Meaning_Source meaning_source;
-}
-
-// -------------------------------------------------------------------
-// VM
-// -------------------------------------------------------------------
+// canonical meaning types (struct + enums)
+import structs.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_Source;
 
 struct Command_Line_Tokens_VM
 {
@@ -60,9 +23,6 @@ struct Command_Line_Tokens_VM
     @safe pure nothrow
     Command_Line_Meaning meaning() const
     {
-        // --------------------------------------------
-        // Zero-token → tree descent (correct meaning)
-        // --------------------------------------------
         if (tokens_lower_cli_args.length == 0)
         {
             return command_line_meaning_tree_descent();
@@ -82,7 +42,6 @@ struct Command_Line_Tokens_VM
             }
         }
 
-        // chapter
         if (kinds.length == 1 && kinds[0] == TokenKind.chapter)
         {
             auto m = command_line_meaning_chapter(tokens_lower_cli_args, kinds);
@@ -90,7 +49,6 @@ struct Command_Line_Tokens_VM
             return m;
         }
 
-        // page
         if (kinds.length == 1 && kinds[0] == TokenKind.page)
         {
             auto m = command_line_meaning_page(tokens_lower_cli_args, kinds);
@@ -98,7 +56,6 @@ struct Command_Line_Tokens_VM
             return m;
         }
 
-        // section (NCN/CNC)
         if (kinds.length == 1 && kinds[0] == TokenKind.section)
         {
             auto m = command_line_meaning_section(tokens_lower_cli_args, kinds);
