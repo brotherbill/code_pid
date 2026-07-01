@@ -44,18 +44,26 @@ struct Command_Line_Meaning
 
     Meaning_Source meaning_source;
 
+    void enforceInvalidInvariants() const
+    {
+        assert(!is_valid,                         "invalid meaning must have is_valid == false");
+        assert(!has_chapter,                      "invalid meaning must not have chapter");
+        assert(!has_page,                         "invalid meaning must not have page");
+        assert(chapter      == 0,                 "invalid meaning must have chapter == 0");
+        assert(page         == 0,                 "invalid meaning must have page == 0");
+        assert(section_type == Section_Type.none, "invalid meaning must have section_type == none");
+        assert(ncn          == NCN.init,          "invalid meaning must have ncn == NCN.init");
+        assert(cnc          == CNC.init,          "invalid meaning must have cnc == CNC.init");
+        assert(meaning_source == Meaning_Source.unknown,
+                                                  "invalid meaning must have meaning_source == unknown");
+    }
+
     invariant
     {
         // INVALID meaning → everything neutral
         if (!is_valid)
         {
-            assert(!has_chapter,                      "invalid meaning must not have chapter");
-            assert(!has_page,                          "invalid meaning must not have page");
-            assert(chapter      == 0,                 "invalid meaning must have chapter == 0");
-            assert(page         == 0,                 "invalid meaning must have page == 0");
-            assert(section_type == Section_Type.none, "invalid meaning must have section_type == none");
-            assert(ncn          == NCN.init,          "invalid meaning must have ncn == NCN.init");
-            assert(cnc          == CNC.init,          "invalid meaning must have cnc == CNC.init");
+            enforceInvalidInvariants();
             return;
         }
 
@@ -116,7 +124,7 @@ struct Command_Line_Meaning
                 break;
 
             case Meaning_Source.unknown:
-                // unknown may be invalid OR incomplete
+                enforceInvalidInvariants();
                 break;
         }
     }
