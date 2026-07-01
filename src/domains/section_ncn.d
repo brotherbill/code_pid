@@ -1,15 +1,58 @@
-// Start of Document /</repo:code_pid/src/structs/ncn.d/>
+// Start of Document /</repo:code_pid/src/domains/section_ncn.d/>
 
-module structs.ncn;
+module domains.section_ncn;
 
 private enum NUL = '\0';  // NUL character to indicate missing letter
 
-struct NCN
+struct Section_NCN
 {
     // 0 and NUL are used to indicate missing values for the number and letter components, respectively.
     ubyte number_major;  // 0–99
     char  letter;        // 'a'–'z' or NUL ('\0')
     ubyte number_minor;  // 0–99
+
+    @safe pure nothrow
+    static Section_NCN from_token(const string s)
+    {
+        Section_NCN result;
+
+        // Empty token → empty NCN
+        if (s.length == 0)
+            return Section_NCN.init;
+
+        size_t i = 0;
+
+        // parse number_major
+        ubyte major = 0;
+        while (i < s.length && s[i] >= '0' && s[i] <= '9')
+        {
+            major = cast(ubyte)(major * 10 + (s[i] - '0'));
+            i++;
+        }
+        result.number_major = major;
+
+        // optional letter
+        if (i < s.length && s[i] >= 'a' && s[i] <= 'z')
+        {
+            result.letter = s[i];
+            i++;
+        }
+        else
+        {
+            result.letter = NUL;
+        }
+
+        // optional number_minor
+        ubyte minor = 0;
+        while (i < s.length && s[i] >= '0' && s[i] <= '9')
+        {
+            minor = cast(ubyte)(minor * 10 + (s[i] - '0'));
+            i++;
+        }
+        result.number_minor = minor;
+
+        return result;
+    }
 
     invariant
     {
@@ -21,10 +64,6 @@ struct NCN
 
         assert(number_minor <= 99,
                "number_minor must be in the range 0–99");
-
-        // ------------------------------------------------------------------
-        // Semantic completeness rules (corrected, no drift)
-        // ------------------------------------------------------------------
 
         // Rule 1:
         // If number_major is missing (0),
@@ -57,4 +96,4 @@ struct NCN
     }
 }
 
-// End of Document /</repo:code_pid/src/structs/ncn.d/>
+// End of Document /</repo:code_pid/src/domains/section_ncn.d/>

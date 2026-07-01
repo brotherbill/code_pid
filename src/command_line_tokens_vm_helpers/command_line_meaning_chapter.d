@@ -2,9 +2,9 @@
 
 module command_line_tokens_vm_helpers.command_line_meaning_chapter;
 
-import structs.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_Source;
-import structs.ncn                  : NCN;
-import structs.cnc                  : CNC;
+import domains.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_Source;
+import domains.section_ncn          : Section_NCN;
+import domains.section_cnc          : Section_CNC;
 
 import command_line_tokens_vm_helpers.command_line_meaning_invalid : invalid;
 import command_line_tokens_vm_helpers.token_kinds                  : TokenKind;

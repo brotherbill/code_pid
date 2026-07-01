@@ -1,9 +1,9 @@
-// Start of Document /</repo:code_pid/src/structs/command_line_meaning.d/>
+// Start of Document /</repo:code_pid/src/domains/command_line_meaning.d/>
 
-module structs.command_line_meaning;
+module domains.command_line_meaning;
 
-import structs.ncn : NCN;
-import structs.cnc : CNC;
+import domains.section_ncn : Section_NCN;
+import domains.section_cnc : Section_CNC;
 
 private enum NUL = '\0';
 
@@ -41,8 +41,8 @@ struct Command_Line_Meaning
 
     Section_Type section_type;
 
-    NCN ncn;
-    CNC cnc;
+    Section_NCN ncn;
+    Section_CNC cnc;
 
     Meaning_Source meaning_source;
 
@@ -215,8 +215,8 @@ struct Command_Line_Meaning
             case Meaning_Source.token:
                 assert(is_valid,
                        "token meaning must be valid");
-                assert(has_chapter || has_page,
-                       "token meaning must have chapter or page (or both)");
+                assert(has_chapter || has_page || section_type != Section_Type.none,
+                       "token meaning must have chapter, page, or section");
                 break;
 
             case Meaning_Source.unknown:
@@ -258,4 +258,4 @@ struct Command_Line_Meaning
     }
 }
 
-// End of Document /</repo:code_pid/src/structs/command_line_meaning.d/>
+// End of Document /</repo:code_pid/src/domains/command_line_meaning.d/>

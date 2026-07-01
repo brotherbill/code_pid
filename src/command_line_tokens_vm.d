@@ -10,11 +10,11 @@ import command_line_tokens_vm_helpers.command_line_meaning_section : command_lin
 import command_line_tokens_vm_helpers.command_line_meaning_tree_descent : command_line_meaning_tree_descent;
 
 // canonical NCN/CNC
-import structs.ncn : NCN;
-import structs.cnc : CNC;
+import domains.section_ncn : Section_NCN;
+import domains.section_cnc : Section_CNC;
 
 // canonical meaning types (struct + enums)
-import structs.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_Source;
+import domains.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_Source;
 
 struct Command_Line_Tokens_VM
 {
