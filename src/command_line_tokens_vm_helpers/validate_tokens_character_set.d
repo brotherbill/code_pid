@@ -1,4 +1,4 @@
-// Start of Document /</repo:code_pid/src/command_line/validate_tokens_character_set.d/>
+// Start of Document /</repo:code_pid/src/command_line_tokens_vm_helpers/validate_tokens_character_set.d/>
 
 module command_line_tokens_vm_helpers.validate_tokens_character_set;
 
@@ -22,4 +22,4 @@ bool validate_tokens_character_set(in string[] tokens_lower)
     return true;
 }
 
-// End of Document /</repo:code_pid/src/command_line/validate_tokens_character_set.d/>
+// End of Document /</repo:code_pid/src/command_line_tokens_vm_helpers/validate_tokens_character_set.d/>

@@ -1,10 +1,10 @@
-// Start of Document /\<repo:code_pid/src/command_line/command_line_meaning_section.d\>/
+// Start of Document /</repo:code_pid/src/command_line_tokens_vm_helpers/command_line_meaning_section.d/>
 
 module command_line_tokens_vm_helpers.command_line_meaning_section;
 
-import domains.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_Source;
-import domains.section_ncn          : Section_NCN;
-import domains.section_cnc          : Section_CNC;
+import domain.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_UI_Mode;
+import domain.section_ncn          : Section_NCN;
+import domain.section_cnc          : Section_CNC;
 
 import command_line_tokens_vm_helpers.token_kinds : TokenKind;
 import command_line_tokens_vm_helpers.command_line_meaning_invalid : invalid;
@@ -88,9 +88,9 @@ Command_Line_Meaning command_line_meaning_section(in string[] tokens_lower,
         result.ncn = Section_NCN.init;
     }
 
-    result.meaning_source  = Meaning_Source.token;
+    result.meaning_mode    = Meaning_UI_Mode.express_with_token;
 
     return result;
 }
 
-// End of Document /\<repo:code_pid/src/command_line/command_line_meaning_section.d\>/
+// End of Document /</repo:code_pid/src/command_line_tokens_vm_helpers/command_line_meaning_section.d/>

@@ -1,6 +1,6 @@
-// Start of Document /</repo:code_pid/src/domains/section_ncn.d/>
+// Start of Document /</repo:code_pid/src/domain/section_ncn.d/>
 
-module domains.section_ncn;
+module domain.section_ncn;
 
 private enum NUL = '\0';  // NUL character to indicate missing letter
 
@@ -96,4 +96,4 @@ struct Section_NCN
     }
 }
 
-// End of Document /</repo:code_pid/src/domains/section_ncn.d/>
+// End of Document /</repo:code_pid/src/domain/section_ncn.d/>

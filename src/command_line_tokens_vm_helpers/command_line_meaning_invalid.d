@@ -2,9 +2,9 @@
 
 module command_line_tokens_vm_helpers.command_line_meaning_invalid;
 
-import domains.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_Source;
-import domains.section_ncn          : Section_NCN;
-import domains.section_cnc          : Section_CNC;
+import domain.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_UI_Mode;
+import domain.section_ncn          : Section_NCN;
+import domain.section_cnc          : Section_CNC;
 
 @safe pure nothrow
 Command_Line_Meaning invalid()
@@ -20,7 +20,7 @@ Command_Line_Meaning invalid()
     result.ncn             = Section_NCN.init;
     result.cnc             = Section_CNC.init;
 
-    result.meaning_source  = Meaning_Source.unknown;
+    result.meaning_mode    = Meaning_UI_Mode.invalid;
 
     return result;
 }

@@ -5,11 +5,11 @@ module test.command_line_tokens_vm_negative_tests;
 import std.stdio     : writeln;
 import std.exception : Exception;
 
-import vms.command_line_tokens_vm : Command_Line_Tokens_VM;
+import vm.command_line_tokens_vm : Command_Line_Tokens_VM;
 
 import domain.command_line_meaning :
     Command_Line_Meaning,
-    Meaning_Source;
+    Meaning_UI_Mode;
 
 // ------------------------------------------------------------
 // Invalid token → invalid()
@@ -21,7 +21,7 @@ void invalid_token_should_produce_invalid_meaning()
     auto vm = Command_Line_Tokens_VM(tokens_lower_cli_args);
     auto meaning = vm.meaning();
 
-    assert(meaning.meaning_source == Meaning_Source.unknown,
+    assert(meaning.meaning_mode == Meaning_UI_Mode.invalid,
         "Invalid token should produce invalid meaning.");
 }
 
@@ -35,7 +35,7 @@ void malformed_section_abc_should_produce_invalid_meaning()
     auto vm = Command_Line_Tokens_VM(tokens_lower_cli_args);
     auto meaning = vm.meaning();
 
-    assert(meaning.meaning_source == Meaning_Source.unknown,
+    assert(meaning.meaning_mode == Meaning_UI_Mode.invalid,
         "Malformed section token should produce invalid meaning.");
 }
 
@@ -49,7 +49,7 @@ void two_tokens_c1_p1_should_produce_invalid_meaning()
     auto vm = Command_Line_Tokens_VM(tokens_lower_cli_args);
     auto meaning = vm.meaning();
 
-    assert(meaning.meaning_source == Meaning_Source.unknown,
+    assert(meaning.meaning_mode == Meaning_UI_Mode.invalid,
         "Two valid tokens (c1 p1) must produce invalid meaning.");
 }
 
@@ -63,7 +63,7 @@ void two_tokens_should_produce_invalid_meaning()
     auto vm = Command_Line_Tokens_VM(tokens_lower_cli_args);
     auto meaning = vm.meaning();
 
-    assert(meaning.meaning_source == Meaning_Source.unknown,
+    assert(meaning.meaning_mode == Meaning_UI_Mode.invalid,
         "Two tokens should produce invalid meaning.");
 }
 
@@ -77,7 +77,7 @@ void three_tokens_should_produce_invalid_meaning()
     auto vm = Command_Line_Tokens_VM(tokens_lower_cli_args);
     auto meaning = vm.meaning();
 
-    assert(meaning.meaning_source == Meaning_Source.unknown,
+    assert(meaning.meaning_mode == Meaning_UI_Mode.invalid,
         "Three tokens should produce invalid meaning.");
 }
 
@@ -91,7 +91,7 @@ void valid_looking_token_with_invalid_kind_should_produce_invalid_meaning()
     auto vm = Command_Line_Tokens_VM(tokens_lower_cli_args);
     auto meaning = vm.meaning();
 
-    assert(meaning.meaning_source == Meaning_Source.unknown,
+    assert(meaning.meaning_mode == Meaning_UI_Mode.invalid,
         "Token that classifies as invalid should produce invalid meaning.");
 }
 

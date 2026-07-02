@@ -2,9 +2,9 @@
 
 module command_line_tokens_vm_helpers.command_line_meaning_tree_descent;
 
-import domains.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_Source;
-import domains.section_ncn          : Section_NCN;
-import domains.section_cnc          : Section_CNC;
+import domain.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_UI_Mode;
+import domain.section_ncn          : Section_NCN;
+import domain.section_cnc          : Section_CNC;
 
 @safe pure nothrow
 Command_Line_Meaning command_line_meaning_tree_descent()
@@ -32,9 +32,9 @@ Command_Line_Meaning command_line_meaning_tree_descent()
     result.ncn             = Section_NCN.init;
     result.cnc             = Section_CNC.init;
 
-    // Meaning source classification:
-    // Tree-descent is not token-derived; it is structural.
-    result.meaning_source  = Meaning_Source.tree_descent;
+    // Meaning UI mode classification:
+    // Tree-descent is structural, not token-derived.
+    result.meaning_mode    = Meaning_UI_Mode.tree_descent;
 
     return result;
 }

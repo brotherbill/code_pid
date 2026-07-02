@@ -2,9 +2,9 @@
 
 module command_line_tokens_vm_helpers.command_line_meaning_chapter;
 
-import domains.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_Source;
-import domains.section_ncn          : Section_NCN;
-import domains.section_cnc          : Section_CNC;
+import domain.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_UI_Mode;
+import domain.section_ncn          : Section_NCN;
+import domain.section_cnc          : Section_CNC;
 
 import command_line_tokens_vm_helpers.command_line_meaning_invalid : invalid;
 import command_line_tokens_vm_helpers.token_kinds                  : TokenKind;
@@ -47,7 +47,7 @@ Command_Line_Meaning command_line_meaning_chapter(in string[] tokens_lower,
         result.chapter         = chapter;
         result.section_type    = Section_Type.none;
 
-        result.meaning_source  = Meaning_Source.token;
+        result.meaning_mode    = Meaning_UI_Mode.express_with_token;
         return result;
     }
 
@@ -81,7 +81,7 @@ Command_Line_Meaning command_line_meaning_chapter(in string[] tokens_lower,
         result.chapter         = chapter;
         result.section_type    = Section_Type.none;
 
-        result.meaning_source  = Meaning_Source.token;
+        result.meaning_mode    = Meaning_UI_Mode.express_with_token;
         return result;
     }
 

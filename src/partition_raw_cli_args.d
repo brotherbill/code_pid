@@ -1,6 +1,6 @@
-// Start of Document /</repo:code_pid/src/command_line_tokens_vm_helpers/partition_raw_cli_args.d/>
+// Start of Document /</repo:code_pid/src/partition_raw_cli_args.d/>
 
-module command_line_tokens_vm_helpers.partition_raw_cli_args;
+module partition_raw_cli_args;
 
 import utilities.to_lower : to_lower;
 
@@ -35,4 +35,4 @@ Parts partition_raw_cli_args(in string[] cli_raw_args)
     return result;
 }
 
-// End of Document /</repo:code_pid/src/command_line_tokens_vm_helpers/partition_raw_cli_args.d/>
+// End of Document /</repo:code_pid/src/partition_raw_cli_args.d/>

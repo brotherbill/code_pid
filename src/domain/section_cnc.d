@@ -1,6 +1,6 @@
-// Start of Document /\<repo:code_pid/src/domains/section_cnc.d\>/
+// Start of Document /</repo:code_pid/src/domain/section_cnc.d/>
 
-module domains.section_cnc;
+module domain.section_cnc;
 
 private enum NUL = '\0';  // NUL character to indicate missing letter
 
@@ -83,4 +83,4 @@ struct Section_CNC
     }
 }
 
-// End of Document /\<repo:code_pid/src/domains/section_cnc.d\>/
+// End of Document /</repo:code_pid/src/domain/section_cnc.d/>

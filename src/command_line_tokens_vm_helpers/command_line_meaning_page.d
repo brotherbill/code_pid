@@ -1,16 +1,16 @@
-// Start of Document /</repo:code_pid/src/command_line/command_line_meaning_page.d/>
+// Start of Document /</repo:code_pid/src/command_line_tokens_vm_helpers/command_line_meaning_page.d/>
 
 module command_line_tokens_vm_helpers.command_line_meaning_page;
 
-import domains.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_Source;
-import domains.section_ncn          : Section_NCN;
-import domains.section_cnc          : Section_CNC;
+import domain.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_UI_Mode;
+import domain.section_ncn          : Section_NCN;
+import domain.section_cnc          : Section_CNC;
 
 import command_line_tokens_vm_helpers.token_kinds : TokenKind;
 import command_line_tokens_vm_helpers.command_line_meaning_invalid : invalid;
 
 @safe pure nothrow
-Command_Line_Meaning command_line_meaning_page(in string[] tokens_lower,
+Command_Line_Meaning command_line_meaning_page(in string[]    tokens_lower,
                                                in TokenKind[] token_kinds)
 {
     enum ushort MAX_PAGE = 999;
@@ -48,7 +48,7 @@ Command_Line_Meaning command_line_meaning_page(in string[] tokens_lower,
         result.page            = page;
         result.section_type    = Section_Type.none;
 
-        result.meaning_source  = Meaning_Source.token;
+        result.meaning_mode    = Meaning_UI_Mode.express_with_token;
         return result;
     }
 
@@ -84,7 +84,7 @@ Command_Line_Meaning command_line_meaning_page(in string[] tokens_lower,
         result.page            = page;
         result.section_type    = Section_Type.none;
 
-        result.meaning_source  = Meaning_Source.token;
+        result.meaning_mode    = Meaning_UI_Mode.express_with_token;
         return result;
     }
 
@@ -94,4 +94,4 @@ Command_Line_Meaning command_line_meaning_page(in string[] tokens_lower,
     return invalid();
 }
 
-// End of Document /</repo:code_pid/src/command_line/command_line_meaning_page.d/>
+// End of Document /</repo:code_pid/src/command_line_tokens_vm_helpers/command_line_meaning_page.d/>

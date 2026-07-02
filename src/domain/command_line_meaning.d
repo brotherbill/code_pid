@@ -1,9 +1,9 @@
-// Start of Document /</repo:code_pid/src/domains/command_line_meaning.d/>
+// Start of Document /</repo:code_pid/src/domain/command_line_meaning.d/>
 
-module domains.command_line_meaning;
+module domain.command_line_meaning;
 
-import domains.section_ncn : Section_NCN;
-import domains.section_cnc : Section_CNC;
+import domain.section_ncn : Section_NCN;
+import domain.section_cnc : Section_CNC;
 
 private enum NUL = '\0';
 
@@ -18,11 +18,11 @@ enum Section_Type
     cnc    // letter-major, number, letter-minor
 }
 
-enum Meaning_Source
+enum Meaning_UI_Mode
 {
-    tree_descent,   // zero-token mode
-    token,          // token-generated meaning
-    unknown,        // fallback / error / unclassified
+    tree_descent,        // user chose tree-descent UI
+    express_with_token,  // user chose express route using this token
+    invalid              // user provided unusable input
 }
 
 // -------------------------------------------------------------------
@@ -44,7 +44,7 @@ struct Command_Line_Meaning
     Section_NCN ncn;
     Section_CNC cnc;
 
-    Meaning_Source meaning_source;
+    Meaning_UI_Mode meaning_mode;
 
     // ---------------------------------------------------------------
     // INVALID meaning invariants — everything neutral
@@ -68,8 +68,8 @@ struct Command_Line_Meaning
         assert(cnc.number       == 0,             "invalid meaning must have CNC number == 0");
         assert(cnc.letter_minor == NUL,           "invalid meaning must have CNC letter_minor == NUL");
 
-        assert(meaning_source == Meaning_Source.unknown,
-                                                  "invalid meaning must have meaning_source == unknown");
+        assert(meaning_mode == Meaning_UI_Mode.invalid,
+               "invalid meaning must have meaning_mode == invalid");
     }
 
     // ---------------------------------------------------------------
@@ -189,37 +189,37 @@ struct Command_Line_Meaning
     }
 
     // ---------------------------------------------------------------
-    // MEANING SOURCE domain enforcement
+    // MEANING MODE domain enforcement
     // ---------------------------------------------------------------
-    private void enforceMeaningSourceDomain() const
+    private void enforceMeaningModeDomain() const
     {
-        final switch (meaning_source)
+        final switch (meaning_mode)
         {
-            case Meaning_Source.tree_descent:
+            case Meaning_UI_Mode.tree_descent:
                 assert(is_valid,
-                       "meaning_source tree_descent must be valid");
+                       "meaning_mode tree_descent must be valid");
                 assert(!has_chapter,
-                       "meaning_source tree_descent must not have chapter");
+                       "meaning_mode tree_descent must not have chapter");
                 assert(!has_page,
-                       "meaning_source tree_descent must not have page");
+                       "meaning_mode tree_descent must not have page");
                 assert(section_type == Section_Type.none,
-                       "meaning_source tree_descent must have section_type == none");
+                       "meaning_mode tree_descent must have section_type == none");
                 assert(chapter == 0,
-                       "meaning_source tree_descent must have chapter == 0");
+                       "meaning_mode tree_descent must have chapter == 0");
                 assert(page == 0,
-                       "meaning_source tree_descent must have page == 0");
+                       "meaning_mode tree_descent must have page == 0");
 
                 enforceSectionNoneDomain();
                 break;
 
-            case Meaning_Source.token:
+            case Meaning_UI_Mode.express_with_token:
                 assert(is_valid,
-                       "token meaning must be valid");
+                       "express_with_token meaning must be valid");
                 assert(has_chapter || has_page || section_type != Section_Type.none,
-                       "token meaning must have chapter, page, or section");
+                       "express_with_token meaning must have chapter, page, or section");
                 break;
 
-            case Meaning_Source.unknown:
+            case Meaning_UI_Mode.invalid:
                 enforceInvalidInvariants();
                 break;
         }
@@ -254,8 +254,8 @@ struct Command_Line_Meaning
                 break;
         }
 
-        enforceMeaningSourceDomain();
+        enforceMeaningModeDomain();
     }
 }
 
-// End of Document /</repo:code_pid/src/domains/command_line_meaning.d/>
+// End of Document /</repo:code_pid/src/domain/command_line_meaning.d/>

@@ -10,11 +10,11 @@ import command_line_tokens_vm_helpers.command_line_meaning_section : command_lin
 import command_line_tokens_vm_helpers.command_line_meaning_tree_descent : command_line_meaning_tree_descent;
 
 // canonical NCN/CNC
-import domains.section_ncn : Section_NCN;
-import domains.section_cnc : Section_CNC;
+import domain.section_ncn : Section_NCN;
+import domain.section_cnc : Section_CNC;
 
 // canonical meaning types (struct + enums)
-import domains.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_Source;
+import domain.command_line_meaning : Command_Line_Meaning, Section_Type, Meaning_UI_Mode;
 
 struct Command_Line_Tokens_VM
 {
@@ -41,7 +41,7 @@ struct Command_Line_Tokens_VM
         // Zero tokens → tree descent
         if (tokens_lower_cli_args.length == 0)
         {
-            return command_line_meaning_tree_descent ();
+            return command_line_meaning_tree_descent();
         }
 
         // Classify tokens
@@ -50,42 +50,33 @@ struct Command_Line_Tokens_VM
 
         foreach (i, raw_arg; tokens_lower_cli_args)
         {
-            kinds[i] = classify_token (raw_arg);
+            kinds[i] = classify_token(raw_arg);
 
             if (kinds[i] == TokenKind.invalid)
             {
-                Command_Line_Meaning m = invalid ();
-                m.meaning_source = Meaning_Source.unknown;
-                return m;
+                // invalid() already sets meaning_mode = invalid
+                return invalid();
             }
         }
 
         // Single-token meanings
         if (kinds.length == 1 && kinds[0] == TokenKind.chapter)
         {
-            Command_Line_Meaning m = command_line_meaning_chapter (tokens_lower_cli_args, kinds);
-            m.meaning_source = Meaning_Source.token;
-            return m;
+            return command_line_meaning_chapter(tokens_lower_cli_args, kinds);
         }
 
         if (kinds.length == 1 && kinds[0] == TokenKind.page)
         {
-            Command_Line_Meaning m = command_line_meaning_page (tokens_lower_cli_args, kinds);
-            m.meaning_source = Meaning_Source.token;
-            return m;
+            return command_line_meaning_page(tokens_lower_cli_args, kinds);
         }
 
         if (kinds.length == 1 && kinds[0] == TokenKind.section)
         {
-            Command_Line_Meaning m = command_line_meaning_section (tokens_lower_cli_args, kinds);
-            m.meaning_source = Meaning_Source.token;
-            return m;
+            return command_line_meaning_section(tokens_lower_cli_args, kinds);
         }
 
         // Multi-token → invalid
-        Command_Line_Meaning m = invalid ();
-        m.meaning_source = Meaning_Source.unknown;
-        return m;
+        return invalid();
     }
 }
 
